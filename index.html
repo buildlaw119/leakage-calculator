@@ -9,609 +9,446 @@
     <meta name="apple-mobile-web-app-title" content="누수피해산정">
     <title>공동주택 누수피해 보수공사비 산정</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
         body {
-            font-family: 'Malgun Gothic', '맑은 고딕', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
+            font-family: 'Malgun Gothic','맑은 고딕',-apple-system,BlinkMacSystemFont,sans-serif;
+            background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            min-height:100vh;
         }
 
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            display: flex;
-            flex-direction: column;
+            max-width:600px; margin:0 auto; background:white;
+            min-height:100vh; display:flex; flex-direction:column;
         }
 
         /* 헤더 */
         .header {
-            background: linear-gradient(135deg, #1a237e, #283593);
-            color: white;
-            padding: 20px 16px 16px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            background:linear-gradient(135deg,#1a237e,#283593);
+            color:white; padding:18px 16px 14px;
+            text-align:center; position:sticky; top:0; z-index:100;
         }
-
-        .header h1 {
-            font-size: 16px;
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-
-        .header p {
-            font-size: 11px;
-            opacity: 0.75;
-        }
+        .header h1 { font-size:15px; margin-bottom:3px; letter-spacing:-0.3px; }
+        .header p { font-size:11px; opacity:0.75; }
 
         /* 단계 표시 */
         .step-indicator {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            display:flex; background:#f8f9fa;
+            border-bottom:1px solid #e0e0e0;
         }
-
         .step {
-            flex: 1;
-            min-width: 60px;
-            padding: 10px 4px;
-            text-align: center;
-            font-size: 10px;
-            color: #999;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
+            flex:1; min-width:58px; padding:9px 3px;
+            text-align:center; font-size:10px; color:#999;
+            border-bottom:3px solid transparent; transition:all 0.3s;
         }
-
-        .step.active {
-            color: #1a237e;
-            border-bottom-color: #1a237e;
-            background: white;
-            font-weight: bold;
-        }
-
-        .step.completed { color: #4caf50; border-bottom-color: #4caf50; }
-
+        .step.active { color:#1a237e; border-bottom-color:#1a237e; background:white; font-weight:bold; }
+        .step.completed { color:#4caf50; border-bottom-color:#4caf50; }
         .step-number {
-            display: block;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #ddd;
-            color: white;
-            line-height: 22px;
-            margin: 0 auto 3px;
-            font-size: 11px;
+            display:block; width:20px; height:20px; border-radius:50%;
+            background:#ddd; color:white; line-height:20px;
+            margin:0 auto 3px; font-size:10px;
         }
-
-        .step.active .step-number { background: #1a237e; }
-        .step.completed .step-number { background: #4caf50; }
+        .step.active .step-number { background:#1a237e; }
+        .step.completed .step-number { background:#4caf50; }
 
         /* 진행바 */
-        .progress-bar {
-            height: 3px;
-            background: #e0e0e0;
-        }
-
+        .progress-bar { height:3px; background:#e0e0e0; }
         .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #1a237e, #7986cb);
-            transition: width 0.5s ease;
+            height:100%; background:linear-gradient(90deg,#1a237e,#7986cb);
+            transition:width 0.5s ease;
         }
 
-        /* 콘텐츠 영역 */
-        .content {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .section { display: none; }
-        .section.active { display: block; }
+        /* 콘텐츠 */
+        .content { flex:1; padding:16px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+        .section { display:none; }
+        .section.active { display:block; }
 
         .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #1a237e;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e8eaf6;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size:16px; font-weight:bold; color:#1a237e;
+            margin-bottom:16px; padding-bottom:10px;
+            border-bottom:2px solid #e8eaf6;
+            display:flex; align-items:center; gap:8px;
         }
 
-        /* 폼 요소 */
-        .form-group { margin-bottom: 18px; }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 8px;
+        /* 폼 */
+        .form-group { margin-bottom:18px; }
+        .form-group > label {
+            display:block; font-size:13px; font-weight:bold;
+            color:#333; margin-bottom:8px;
         }
-
         .form-group input,
         .form-group select,
         .form-group textarea {
-            width: 100%;
-            padding: 13px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px; /* 모바일 줌 방지: 16px 이상 권장 */
-            font-family: inherit;
-            transition: border-color 0.3s;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            background: white;
+            width:100%; padding:13px 14px;
+            border:2px solid #e0e0e0; border-radius:10px;
+            font-size:15px; font-family:inherit;
+            transition:border-color 0.3s; outline:none;
+            -webkit-appearance:none; appearance:none; background:white;
         }
-
         .form-group input:focus,
         .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: #1a237e;
-        }
+        .form-group textarea:focus { border-color:#1a237e; }
 
         /* 주소 검색 */
-        .address-search { display: flex; gap: 8px; }
-        .address-search input { flex: 1; }
-
+        .address-search { display:flex; gap:8px; }
+        .address-search input { flex:1; }
         .btn-search {
-            padding: 13px 14px;
-            background: #1a237e;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            white-space: nowrap;
-            min-width: 80px;
-            -webkit-tap-highlight-color: transparent;
+            padding:13px 14px; background:#1a237e; color:white;
+            border:none; border-radius:10px; cursor:pointer;
+            font-size:13px; white-space:nowrap; min-width:72px;
         }
+
+        /* 검색 결과 드롭다운 */
+        .search-results {
+            border:2px solid #1a237e; border-radius:10px;
+            margin-top:6px; overflow:hidden; display:none;
+            box-shadow:0 4px 12px rgba(0,0,0,0.15);
+        }
+        .search-results.show { display:block; }
+        .search-result-item {
+            padding:13px 14px; border-bottom:1px solid #e8eaf6;
+            cursor:pointer; transition:background 0.2s; font-size:14px;
+        }
+        .search-result-item:last-child { border-bottom:none; }
+        .search-result-item:active { background:#e8eaf6; }
+        .search-result-item .result-name { font-weight:bold; color:#1a237e; margin-bottom:2px; }
+        .search-result-item .result-addr { font-size:12px; color:#888; }
+
+        /* 상세주소 입력 */
+        .detail-address-box {
+            background:#e8eaf6; border-radius:10px;
+            padding:14px; margin-top:10px; display:none;
+        }
+        .detail-address-box.show { display:block; }
+        .detail-address-box .selected-addr {
+            font-size:13px; font-weight:bold; color:#1a237e; margin-bottom:10px;
+        }
+        .detail-inputs { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .detail-inputs input {
+            padding:11px 12px; border:2px solid #c5cae9;
+            border-radius:8px; font-size:14px; background:white;
+        }
+
+        /* 네이버 부동산 연결 버튼 */
+        .naver-btn {
+            display:flex; align-items:center; justify-content:center;
+            gap:8px; width:100%; padding:13px;
+            background:linear-gradient(135deg,#03c75a,#02a84a);
+            color:white; border:none; border-radius:10px;
+            font-size:14px; font-weight:bold; cursor:pointer;
+            margin-top:10px; text-decoration:none;
+        }
+        .naver-btn:active { opacity:0.85; }
 
         /* 건물 정보 박스 */
         .info-box {
-            background: #e8eaf6;
-            border-radius: 10px;
-            padding: 14px;
-            margin-top: 10px;
-            display: none;
+            background:#e8eaf6; border-radius:10px;
+            padding:14px; margin-top:10px; display:none;
         }
-
-        .info-box.show { display: block; }
-
+        .info-box.show { display:block; }
         .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            font-size: 13px;
-            border-bottom: 1px solid #c5cae9;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:6px 0; font-size:13px;
+            border-bottom:1px solid #c5cae9;
         }
+        .info-row:last-child { border-bottom:none; }
+        .info-row .label { color:#666; }
+        .info-row .value { font-weight:bold; color:#1a237e; text-align:right; max-width:60%; }
 
-        .info-row:last-child { border-bottom: none; }
-        .info-row .label { color: #666; }
-        .info-row .value { font-weight: bold; color: #1a237e; text-align: right; max-width: 60%; }
+        /* 누수 원인 선택 */
+        .cause-grid {
+            display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+        }
+        .cause-item {
+            border:2px solid #e0e0e0; border-radius:12px;
+            padding:16px 8px; text-align:center; cursor:pointer;
+            transition:all 0.2s; position:relative;
+            user-select:none;
+        }
+        .cause-item:active { transform:scale(0.95); }
+        .cause-item.selected { border-color:#e65100; background:#fff3e0; }
+        .cause-icon { font-size:30px; display:block; margin-bottom:6px; }
+        .cause-name { font-size:12px; font-weight:bold; color:#333; }
+        .cause-check {
+            position:absolute; top:6px; right:6px;
+            width:18px; height:18px; background:#e65100;
+            border-radius:50%; color:white; font-size:10px;
+            display:none; align-items:center; justify-content:center;
+        }
+        .cause-item.selected .cause-check { display:flex; }
 
         /* 방 선택 그리드 */
         .room-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 8px;
+            display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
         }
-
         .room-item {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 14px 6px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
+            border:2px solid #e0e0e0; border-radius:12px;
+            padding:14px 6px 10px; text-align:center; cursor:pointer;
+            transition:all 0.2s; position:relative; user-select:none;
         }
-
-        .room-item:active { transform: scale(0.95); }
-        .room-item.selected { border-color: #1a237e; background: #e8eaf6; }
-
-        .room-icon { font-size: 32px; display: block; margin-bottom: 6px; }
-        .room-name { font-size: 12px; font-weight: bold; color: #333; margin-bottom: 2px; }
-
+        .room-item:active { transform:scale(0.95); }
+        .room-item.selected { border-color:#1a237e; background:#e8eaf6; }
+        .room-icon { font-size:28px; display:block; margin-bottom:5px; }
+        .room-name { font-size:12px; font-weight:bold; color:#333; margin-bottom:2px; }
+        .room-pyeong { font-size:11px; color:#888; }
         .check-mark {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 20px;
-            height: 20px;
-            background: #1a237e;
-            border-radius: 50%;
-            color: white;
-            font-size: 11px;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            position:absolute; top:6px; right:6px;
+            width:18px; height:18px; background:#1a237e;
+            border-radius:50%; color:white; font-size:10px;
+            display:none; align-items:center; justify-content:center;
         }
+        .room-item.selected .check-mark { display:flex; }
 
-        .room-item.selected .check-mark { display: flex; }
-
-        .area-input { margin-top: 8px; display: none; }
-        .area-input.show { display: block; }
-
-        .area-input input {
-            width: 100%;
-            padding: 7px 6px;
-            border: 1px solid #9fa8da;
-            border-radius: 8px;
-            font-size: 13px;
-            text-align: center;
-            background: white;
+        /* 피해 면적 요약 */
+        .area-summary {
+            background:#e8f5e9; border-radius:10px;
+            padding:14px; margin-top:14px; display:none;
         }
-
-        /* 요약 박스 */
-        .selected-rooms-summary {
-            background: #e8f5e9;
-            border-radius: 10px;
-            padding: 14px;
-            margin-top: 14px;
-            display: none;
-        }
-
-        .selected-rooms-summary.show { display: block; }
-        .summary-title { font-size: 13px; font-weight: bold; color: #2e7d32; margin-bottom: 8px; }
-
+        .area-summary.show { display:block; }
+        .summary-title { font-size:13px; font-weight:bold; color:#2e7d32; margin-bottom:8px; }
         .summary-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            padding: 4px 0;
-            border-bottom: 1px dashed #c8e6c9;
-            color: #444;
+            display:flex; justify-content:space-between;
+            font-size:12px; padding:4px 0;
+            border-bottom:1px dashed #c8e6c9; color:#444;
         }
-
         .summary-total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            font-weight: bold;
-            color: #2e7d32;
-            padding-top: 8px;
-            margin-top: 4px;
+            display:flex; justify-content:space-between;
+            font-size:14px; font-weight:bold; color:#2e7d32;
+            padding-top:8px; margin-top:4px;
         }
 
-        /* 선택 버튼 */
-        .damage-level {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+        /* 선택 버튼 (복수) */
+        .multi-btn-group { display:flex; gap:8px; flex-wrap:wrap; }
+        .multi-btn {
+            padding:10px 14px; border:2px solid #e0e0e0;
+            border-radius:20px; cursor:pointer; font-size:13px;
+            transition:all 0.2s; background:white; font-family:inherit;
         }
+        .multi-btn:active { transform:scale(0.95); }
+        .multi-btn.selected { background:#1a237e; color:white; border-color:#1a237e; }
 
-        .damage-btn {
-            padding: 10px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
-            background: white;
-            font-family: inherit;
-            -webkit-tap-highlight-color: transparent;
+        /* 단일 선택 버튼 */
+        .single-btn-group { display:flex; gap:8px; flex-wrap:wrap; }
+        .single-btn {
+            padding:10px 14px; border:2px solid #e0e0e0;
+            border-radius:20px; cursor:pointer; font-size:13px;
+            transition:all 0.2s; background:white; font-family:inherit;
         }
+        .single-btn:active { transform:scale(0.95); }
+        .single-btn.selected { background:#1a237e; color:white; border-color:#1a237e; }
 
-        .damage-btn:active { transform: scale(0.95); }
-        .damage-btn.selected { background: #1a237e; color: white; border-color: #1a237e; }
+        /* 누수 지속 기간 자동 표시 */
+        .duration-auto {
+            background:#e3f2fd; border-radius:10px;
+            padding:14px; text-align:center;
+        }
+        .duration-auto .duration-value {
+            font-size:20px; font-weight:bold; color:#1a237e; margin-bottom:4px;
+        }
+        .duration-auto .duration-sub { font-size:12px; color:#666; }
 
-        /* 시간 입력 */
-        .time-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-
-        .time-input-group { text-align: center; }
-        .time-input-group > label { font-size: 12px; color: #666; margin-bottom: 4px; font-weight: normal; }
+        /* 피해자 요구금액 선택 */
+        .amount-select-grid {
+            display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
+        }
+        .amount-select-btn {
+            padding:12px 8px; border:2px solid #e0e0e0;
+            border-radius:10px; cursor:pointer; font-size:13px;
+            text-align:center; transition:all 0.2s;
+            background:white; font-family:inherit; font-weight:bold;
+        }
+        .amount-select-btn:active { transform:scale(0.97); }
+        .amount-select-btn.selected {
+            background:#e65100; color:white; border-color:#e65100;
+        }
 
         /* 분쟁 섹션 */
         .dispute-section {
-            background: #fff3e0;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 16px;
+            background:#fff3e0; border-radius:10px;
+            padding:16px; margin-bottom:16px;
         }
+        .dispute-title { font-size:14px; font-weight:bold; color:#e65100; margin-bottom:12px; }
 
-        .dispute-title { font-size: 14px; font-weight: bold; color: #e65100; margin-bottom: 12px; }
-
-        .radio-group { display: flex; flex-direction: column; gap: 8px; }
-
+        .radio-group { display:flex; flex-direction:column; gap:8px; }
         .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 12px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            background: white;
-            font-size: 14px;
-            transition: all 0.2s;
+            display:flex; align-items:center; gap:10px; cursor:pointer;
+            padding:12px 14px; border:2px solid #e0e0e0;
+            border-radius:10px; background:white; font-size:14px;
+            transition:all 0.2s;
         }
-
         .radio-item input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: #e65100;
-            flex-shrink: 0;
+            width:18px; height:18px; cursor:pointer;
+            accent-color:#e65100; flex-shrink:0;
         }
+        .radio-item.checked { border-color:#e65100; background:#fff3e0; }
 
-        .radio-item.checked { border-color: #e65100; background: #fff3e0; }
-
-        .amount-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-
-        .amount-input-group label {
-            font-size: 12px;
-            color: #555;
-            margin-bottom: 5px;
-            display: block;
-            font-weight: bold;
+        /* 가해자 제시금액 */
+        .offender-amount-wrap { margin-top:12px; }
+        .offender-amount-wrap label {
+            font-size:13px; font-weight:bold; color:#555; margin-bottom:6px; display:block;
         }
-
-        .amount-input-group input {
-            width: 100%;
-            padding: 11px 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            text-align: right;
+        .offender-amount-wrap input {
+            width:100%; padding:12px 14px;
+            border:2px solid #e0e0e0; border-radius:10px;
+            font-size:15px; text-align:right; background:white;
         }
+        .amount-text { font-size:11px; color:#888; text-align:right; margin-top:3px; }
 
-        .amount-text { font-size: 11px; color: #888; text-align: right; margin-top: 3px; }
-
-        /* 하단 버튼 */
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 24px;
-            padding-bottom: 20px;
-        }
-
+        /* 버튼 */
+        .btn-group { display:flex; gap:10px; margin-top:24px; padding-bottom:20px; }
         .btn-prev {
-            flex: 1;
-            padding: 15px;
-            background: #f5f5f5;
-            color: #333;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 15px;
-            font-family: inherit;
-            -webkit-tap-highlight-color: transparent;
+            flex:1; padding:15px; background:#f5f5f5; color:#333;
+            border:none; border-radius:12px; cursor:pointer;
+            font-size:15px; font-family:inherit;
         }
-
         .btn-next {
-            flex: 2;
-            padding: 15px;
-            background: linear-gradient(135deg, #1a237e, #283593);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            font-family: inherit;
-            -webkit-tap-highlight-color: transparent;
+            flex:2; padding:15px;
+            background:linear-gradient(135deg,#1a237e,#283593);
+            color:white; border:none; border-radius:12px;
+            cursor:pointer; font-size:15px; font-weight:bold; font-family:inherit;
         }
-
-        .btn-next:active, .btn-prev:active { opacity: 0.8; transform: scale(0.98); }
-
+        .btn-next:active, .btn-prev:active { opacity:0.8; transform:scale(0.98); }
         .btn-calculate {
-            flex: 2;
-            padding: 15px;
-            background: linear-gradient(135deg, #e65100, #f57c00);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            font-family: inherit;
+            flex:2; padding:15px;
+            background:linear-gradient(135deg,#e65100,#f57c00);
+            color:white; border:none; border-radius:12px;
+            cursor:pointer; font-size:15px; font-weight:bold; font-family:inherit;
         }
 
         /* 알림 */
         .alert {
-            background: #ffebee;
-            border: 1px solid #ef9a9a;
-            border-radius: 8px;
-            padding: 12px 14px;
-            font-size: 13px;
-            color: #c62828;
-            margin-top: 10px;
-            display: none;
+            background:#ffebee; border:1px solid #ef9a9a;
+            border-radius:8px; padding:12px 14px;
+            font-size:13px; color:#c62828;
+            margin-top:10px; display:none;
         }
-
-        .alert.show { display: block; }
+        .alert.show { display:block; }
 
         /* 로딩 */
-        .loading { display: none; text-align: center; padding: 16px; }
-        .loading.show { display: block; }
-
+        .loading { display:none; text-align:center; padding:16px; }
+        .loading.show { display:block; }
         .spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid #e0e0e0;
-            border-top-color: #1a237e;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 8px;
+            width:34px; height:34px;
+            border:3px solid #e0e0e0; border-top-color:#1a237e;
+            border-radius:50%; animation:spin 0.8s linear infinite;
+            margin:0 auto 8px;
         }
+        @keyframes spin { to { transform:rotate(360deg); } }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* 결과 화면 */
+        /* 결과 */
         .result-section {
-            background: #f5f5f5;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 14px;
+            background:#f5f5f5; border-radius:12px;
+            padding:16px; margin-bottom:14px;
         }
-
         .result-title {
-            font-size: 15px;
-            font-weight: bold;
-            color: #1a237e;
-            margin-bottom: 14px;
-            text-align: center;
+            font-size:15px; font-weight:bold; color:#1a237e;
+            margin-bottom:14px; text-align:center;
         }
-
         .result-item {
-            background: white;
-            border-radius: 10px;
-            padding: 13px 14px;
-            margin-bottom: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            background:white; border-radius:10px;
+            padding:13px 14px; margin-bottom:8px;
+            box-shadow:0 1px 4px rgba(0,0,0,0.08);
         }
-
-        .result-item .item-label {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 4px;
-        }
-
-        .result-item .item-value {
-            font-size: 16px;
-            font-weight: bold;
-            color: #1a237e;
-        }
-
-        .result-item small { font-size: 11px; color: #999; }
+        .result-item .item-label { font-size:12px; color:#666; margin-bottom:4px; }
+        .result-item .item-value { font-size:16px; font-weight:bold; color:#1a237e; }
+        .result-item small { font-size:11px; color:#999; display:block; margin-top:2px; }
 
         .result-total {
-            background: linear-gradient(135deg, #1a237e, #283593);
-            color: white;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 12px;
+            background:linear-gradient(135deg,#1a237e,#283593);
+            color:white; border-radius:12px; padding:20px;
+            text-align:center; margin-top:12px;
         }
-
-        .result-total .total-label { font-size: 13px; opacity: 0.8; margin-bottom: 6px; }
-        .result-total .total-amount { font-size: 26px; font-weight: bold; }
-        .result-total .total-note { font-size: 11px; opacity: 0.65; margin-top: 6px; }
+        .result-total .total-label { font-size:13px; opacity:0.8; margin-bottom:6px; }
+        .result-total .total-amount { font-size:26px; font-weight:bold; }
+        .result-total .total-note { font-size:11px; opacity:0.65; margin-top:6px; }
 
         /* 고지 박스 */
         .notice-box {
-            background: #fff8e1;
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 16px;
+            background:#fff8e1; border:2px solid #ffc107;
+            border-radius:10px; padding:16px; margin-bottom:16px;
         }
-
-        .notice-title {
-            font-size: 13px;
-            font-weight: bold;
-            color: #f57f17;
-            margin-bottom: 8px;
-        }
-
-        .notice-text { font-size: 12px; color: #555; line-height: 1.8; }
+        .notice-title { font-size:13px; font-weight:bold; color:#f57f17; margin-bottom:8px; }
+        .notice-text { font-size:12px; color:#555; line-height:1.8; }
 
         /* 상담 카드 */
-        .consult-section { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
-
+        .consult-section { display:flex; flex-direction:column; gap:12px; margin-top:14px; }
         .consult-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 14px;
-            padding: 18px;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            transition: all 0.2s;
-            -webkit-tap-highlight-color: transparent;
+            border:2px solid #e0e0e0; border-radius:14px; padding:16px;
+            text-decoration:none; color:inherit;
+            display:flex; align-items:center; gap:14px;
+            transition:all 0.2s;
         }
+        .consult-card:active { transform:scale(0.98); opacity:0.9; }
+        .consult-card .card-icon { font-size:34px; flex-shrink:0; }
+        .consult-card .card-body { flex:1; }
+        .consult-card .card-title { font-size:15px; font-weight:bold; color:#1a237e; margin-bottom:3px; }
+        .consult-card .card-desc { font-size:12px; color:#666; line-height:1.5; }
+        .consult-card .card-arrow { font-size:20px; color:#999; flex-shrink:0; }
+        .lawyer-card { border-color:#1a237e; background:#f3f4ff; }
+        .architect-card { border-color:#2e7d32; background:#f1f8f1; }
+        .architect-card .card-title { color:#2e7d32; }
 
-        .consult-card:active { transform: scale(0.98); opacity: 0.9; }
-
-        .consult-card .card-icon { font-size: 36px; flex-shrink: 0; }
-
-        .consult-card .card-body { flex: 1; }
-        .consult-card .card-title { font-size: 15px; font-weight: bold; color: #1a237e; margin-bottom: 4px; }
-        .consult-card .card-desc { font-size: 12px; color: #666; line-height: 1.5; }
-
-        .consult-card .card-arrow {
-            font-size: 20px;
-            color: #999;
-            flex-shrink: 0;
-        }
-
-        .lawyer-card { border-color: #1a237e; background: #f3f4ff; }
-        .architect-card { border-color: #2e7d32; background: #f1f8f1; }
-        .architect-card .card-title { color: #2e7d32; }
-
-        /* 전화 정보 */
         .phone-info {
-            background: #e3f2fd;
-            border-radius: 10px;
-            padding: 14px;
-            margin-top: 14px;
-            font-size: 13px;
-            color: #1565c0;
-            line-height: 2;
+            background:#e3f2fd; border-radius:10px;
+            padding:14px; margin-top:14px;
+            font-size:13px; color:#1565c0; line-height:2;
         }
-
-        .phone-info strong { color: #0d47a1; }
 
         /* 분쟁 결과 */
-        .dispute-result {
-            background: #fff3e0;
-            border-radius: 10px;
-            padding: 14px;
-        }
-
+        .dispute-result { background:#fff3e0; border-radius:10px; padding:14px; }
         .dispute-bar {
-            display: flex;
-            height: 18px;
-            border-radius: 9px;
-            overflow: hidden;
-            margin: 8px 0;
+            display:flex; height:18px; border-radius:9px;
+            overflow:hidden; margin:8px 0;
+        }
+        .victim-bar {
+            background:#e65100; display:flex; align-items:center;
+            justify-content:center; color:white; font-size:10px;
+            transition:width 0.5s;
+        }
+        .offender-bar {
+            background:#1a237e; display:flex; align-items:center;
+            justify-content:center; color:white; font-size:10px;
+            transition:width 0.5s;
         }
 
-        .victim-bar { background: #e65100; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; }
-        .offender-bar { background: #1a237e; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; }
-
-        /* 세대 입력 */
-        .unit-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        /* 토스트 메시지 */
+        /* 토스트 */
         .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            z-index: 9999;
-            transition: transform 0.3s ease;
-            white-space: nowrap;
+            position:fixed; bottom:30px; left:50%;
+            transform:translateX(-50%) translateY(100px);
+            background:rgba(0,0,0,0.8); color:white;
+            padding:12px 24px; border-radius:25px;
+            font-size:14px; z-index:9999;
+            transition:transform 0.3s ease; white-space:nowrap;
+        }
+        .toast.show { transform:translateX(-50%) translateY(0); }
+
+        /* 모달 */
+        .modal-overlay {
+            position:fixed; top:0; left:0; right:0; bottom:0;
+            background:rgba(0,0,0,0.5); z-index:1000;
+            display:none; align-items:flex-end; justify-content:center;
+        }
+        .modal-overlay.show { display:flex; }
+        .modal-box {
+            background:white; width:100%; max-width:600px;
+            border-radius:20px 20px 0 0; padding:20px;
+            max-height:80vh; overflow-y:auto;
+        }
+        .modal-title {
+            font-size:16px; font-weight:bold; color:#1a237e;
+            margin-bottom:14px; text-align:center;
+        }
+        .modal-close {
+            display:block; width:100%; padding:14px;
+            background:#f5f5f5; border:none; border-radius:10px;
+            font-size:15px; cursor:pointer; margin-top:14px;
+            font-family:inherit;
         }
 
-        .toast.show { transform: translateX(-50%) translateY(0); }
-
-        @media (max-width: 360px) {
-            .room-grid { grid-template-columns: repeat(2, 1fr); }
-            .amount-inputs { grid-template-columns: 1fr; }
+        @media (max-width:360px) {
+            .room-grid { grid-template-columns:repeat(2,1fr); }
+            .cause-grid { grid-template-columns:repeat(3,1fr); }
+            .amount-select-grid { grid-template-columns:1fr 1fr; }
         }
     </style>
 </head>
@@ -627,50 +464,68 @@
 
     <!-- 단계 표시 -->
     <div class="step-indicator">
-        <div class="step active" id="step-tab-1">
-            <span class="step-number">1</span>건물정보
-        </div>
-        <div class="step" id="step-tab-2">
-            <span class="step-number">2</span>피해위치
-        </div>
-        <div class="step" id="step-tab-3">
-            <span class="step-number">3</span>피해현황
-        </div>
-        <div class="step" id="step-tab-4">
-            <span class="step-number">4</span>분쟁현황
-        </div>
-        <div class="step" id="step-tab-5">
-            <span class="step-number">5</span>산출결과
-        </div>
+        <div class="step active" id="step-tab-1"><span class="step-number">1</span>건물정보</div>
+        <div class="step" id="step-tab-2"><span class="step-number">2</span>피해위치</div>
+        <div class="step" id="step-tab-3"><span class="step-number">3</span>피해현황</div>
+        <div class="step" id="step-tab-4"><span class="step-number">4</span>분쟁현황</div>
+        <div class="step" id="step-tab-5"><span class="step-number">5</span>산출결과</div>
     </div>
 
-    <!-- 진행바 -->
     <div class="progress-bar">
         <div class="progress-fill" id="progressFill" style="width:20%"></div>
     </div>
 
-    <!-- 콘텐츠 -->
     <div class="content">
 
         <!-- ===== STEP 1: 건물 정보 ===== -->
         <div class="section active" id="section-1">
             <div class="section-title">🏠 건물 기본 정보</div>
 
+            <!-- 주소 검색 -->
             <div class="form-group">
-                <label>📍 아파트/공동주택 주소</label>
+                <label>📍 아파트/공동주택 검색</label>
                 <div class="address-search">
                     <input type="text" id="addressInput"
-                           placeholder="예) 서울 강남구 역삼동 OO아파트"
-                           inputmode="text" />
-                    <button class="btn-search" onclick="searchAddress()">🔍 조회</button>
+                           placeholder="아파트명 또는 도로명 입력"
+                           inputmode="text"
+                           oninput="onAddressInput()" />
+                    <button class="btn-search" onclick="searchAddress()">🔍 검색</button>
                 </div>
+                <div style="font-size:11px;color:#888;margin-top:5px;">
+                    예) 래미안, 힐스테이트, 서울 강남구 테헤란로
+                </div>
+
+                <!-- 검색 결과 -->
+                <div class="search-results" id="searchResults"></div>
+
+                <!-- 로딩 -->
                 <div class="loading" id="addressLoading">
                     <div class="spinner"></div>
-                    <p style="font-size:12px;color:#666;">정보 조회 중...</p>
+                    <p style="font-size:12px;color:#666;">검색 중...</p>
                 </div>
+
                 <div class="alert" id="addressAlert"></div>
             </div>
 
+            <!-- 상세 주소 입력 -->
+            <div class="detail-address-box" id="detailAddressBox">
+                <div class="selected-addr" id="selectedAddrText">📍 선택된 주소</div>
+                <div class="detail-inputs">
+                    <input type="text" id="victimUnit"
+                           placeholder="피해 세대 (예: 1203호)"
+                           inputmode="text" />
+                    <input type="text" id="buildingDong"
+                           placeholder="동 (예: 101동)" inputmode="text" />
+                </div>
+
+                <!-- 네이버 부동산 연결 -->
+                <button class="naver-btn" id="naverBtn" onclick="openNaverLand()">
+                    <span style="font-size:18px;">🟢</span>
+                    네이버 부동산에서 건물정보 확인
+                </button>
+            </div>
+
+            <!-- 건물 정보 표시 -->
             <div class="info-box" id="buildingInfo">
                 <div class="info-row">
                     <span class="label">🏢 건물명</span>
@@ -693,17 +548,37 @@
                 </div>
             </div>
 
+            <!-- 누수 발생일 -->
             <div class="form-group" style="margin-top:16px;">
-                <label>🏠 피해 세대 정보</label>
-                <div class="unit-inputs">
-                    <input type="text" id="victimUnit" placeholder="피해 세대 (예: 1203호)" />
-                    <input type="text" id="offenderUnit" placeholder="가해 세대 (예: 1303호)" />
+                <label>📋 누수 발생일</label>
+                <input type="date" id="damageDate" onchange="calcDuration()" />
+                <div class="duration-auto" id="durationDisplay" style="margin-top:10px;display:none;">
+                    <div class="duration-value" id="durationValue">-</div>
+                    <div class="duration-sub">누수 발생일로부터 현재까지</div>
                 </div>
             </div>
 
+            <!-- 누수 원인 -->
             <div class="form-group">
-                <label>📋 피해 발생일</label>
-                <input type="date" id="damageDate" />
+                <label>💧 누수 발생 원인 <span style="font-size:11px;color:#888;">(복수 선택 가능)</span></label>
+                <div class="cause-grid">
+                    <div class="cause-item" id="cause-upper" onclick="toggleCause('upper')">
+                        <div class="cause-check">✓</div>
+                        <span class="cause-icon">🏠</span>
+                        <div class="cause-name">윗층</div>
+                    </div>
+                    <div class="cause-item" id="cause-roof" onclick="toggleCause('roof')">
+                        <div class="cause-check">✓</div>
+                        <span class="cause-icon">🏗️</span>
+                        <div class="cause-name">옥상</div>
+                    </div>
+                    <div class="cause-item" id="cause-wall" onclick="toggleCause('wall')">
+                        <div class="cause-check">✓</div>
+                        <span class="cause-icon">🧱</span>
+                        <div class="cause-name">외벽</div>
+                    </div>
+                </div>
+                <div class="alert" id="causeAlert"></div>
             </div>
 
             <div class="btn-group">
@@ -715,7 +590,7 @@
         <div class="section" id="section-2">
             <div class="section-title">📍 누수 피해 위치 선택</div>
             <p style="font-size:12px;color:#666;margin-bottom:12px;">
-                피해 공간을 탭하여 선택하고 면적을 입력하세요
+                피해가 발생한 공간을 탭하여 선택하세요. 면적은 자동 산정됩니다.
             </p>
 
             <div class="room-grid">
@@ -723,108 +598,65 @@
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🛋️</span>
                     <div class="room-name">거실</div>
-                    <div class="area-input" id="area-living">
-                        <input type="number" id="area-input-living" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">4평</div>
                 </div>
-
                 <div class="room-item" id="room-kitchen" onclick="toggleRoom('kitchen')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🍳</span>
                     <div class="room-name">주방</div>
-                    <div class="area-input" id="area-kitchen">
-                        <input type="number" id="area-input-kitchen" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">2평</div>
                 </div>
-
                 <div class="room-item" id="room-master" onclick="toggleRoom('master')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🛏️</span>
                     <div class="room-name">안방</div>
-                    <div class="area-input" id="area-master">
-                        <input type="number" id="area-input-master" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">3평</div>
                 </div>
-
                 <div class="room-item" id="room-room2" onclick="toggleRoom('room2')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🚪</span>
                     <div class="room-name">작은방</div>
-                    <div class="area-input" id="area-room2">
-                        <input type="number" id="area-input-room2" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">2.5평</div>
                 </div>
-
                 <div class="room-item" id="room-bathroom" onclick="toggleRoom('bathroom')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🚿</span>
                     <div class="room-name">화장실</div>
-                    <div class="area-input" id="area-bathroom">
-                        <input type="number" id="area-input-bathroom" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">1.5평</div>
                 </div>
-
                 <div class="room-item" id="room-balcony" onclick="toggleRoom('balcony')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🌿</span>
                     <div class="room-name">발코니</div>
-                    <div class="area-input" id="area-balcony">
-                        <input type="number" id="area-input-balcony" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">3평</div>
                 </div>
-
                 <div class="room-item" id="room-entrance" onclick="toggleRoom('entrance')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🚪</span>
                     <div class="room-name">현관</div>
-                    <div class="area-input" id="area-entrance">
-                        <input type="number" id="area-input-entrance" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">0.3평</div>
                 </div>
-
                 <div class="room-item" id="room-utility" onclick="toggleRoom('utility')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">🧹</span>
                     <div class="room-name">다용도실</div>
-                    <div class="area-input" id="area-utility">
-                        <input type="number" id="area-input-utility" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">0.5평</div>
                 </div>
-
                 <div class="room-item" id="room-other" onclick="toggleRoom('other')">
                     <div class="check-mark">✓</div>
                     <span class="room-icon">📦</span>
                     <div class="room-name">기타</div>
-                    <div class="area-input" id="area-other">
-                        <input type="number" id="area-input-other" placeholder="㎡"
-                               inputmode="decimal" onclick="event.stopPropagation()"
-                               oninput="updateSummary()" />
-                    </div>
+                    <div class="room-pyeong">0.2평</div>
                 </div>
             </div>
 
-            <div class="selected-rooms-summary" id="roomSummary">
-                <div class="summary-title">✅ 선택된 피해 공간</div>
+            <!-- 면적 요약 -->
+            <div class="area-summary" id="areaSummary">
+                <div class="summary-title">✅ 선택된 피해 공간 (자동 면적 산정)</div>
                 <div id="summaryItems"></div>
                 <div class="summary-total">
                     <span>총 피해면적</span>
-                    <span id="totalAreaDisplay">0㎡ (0평)</span>
+                    <span id="totalAreaDisplay">0평</span>
                 </div>
             </div>
 
@@ -840,60 +672,68 @@
         <div class="section" id="section-3">
             <div class="section-title">💧 누수 피해 현황</div>
 
+            <!-- 누수 유형 (복수 선택) -->
             <div class="form-group">
-                <label>💧 누수 유형</label>
-                <div class="damage-level">
-                    <button class="damage-btn" onclick="selectType(this,'type')" data-value="천장누수">천장 누수</button>
-                    <button class="damage-btn" onclick="selectType(this,'type')" data-value="벽면누수">벽면 누수</button>
-                    <button class="damage-btn" onclick="selectType(this,'type')" data-value="바닥누수">바닥 누수</button>
-                    <button class="damage-btn" onclick="selectType(this,'type')" data-value="복합누수">복합 누수</button>
+                <label>💧 누수 유형 <span style="font-size:11px;color:#888;">(복수 선택 가능)</span></label>
+                <div class="multi-btn-group">
+                    <button class="multi-btn" id="type-ceiling" onclick="toggleLeakType('ceiling')">천장 누수</button>
+                    <button class="multi-btn" id="type-wall" onclick="toggleLeakType('wall')">벽면 누수</button>
+                    <button class="multi-btn" id="type-complex" onclick="toggleLeakType('complex')">복합 누수</button>
                 </div>
+                <div style="margin-top:8px;padding:10px;background:#f5f5f5;border-radius:8px;font-size:12px;color:#555;">
+                    💡 천장+벽면 동시 선택 시 복합누수(35만원/평)로 자동 산정됩니다
+                </div>
+                <div class="alert" id="leakTypeAlert"></div>
             </div>
 
+            <!-- 피해 심각도 -->
             <div class="form-group">
                 <label>🔴 피해 심각도</label>
-                <div class="damage-level">
-                    <button class="damage-btn" onclick="selectType(this,'severity')" data-value="경미">🟡 경미</button>
-                    <button class="damage-btn" onclick="selectType(this,'severity')" data-value="보통">🟠 보통</button>
-                    <button class="damage-btn" onclick="selectType(this,'severity')" data-value="심각">🔴 심각</button>
+                <div class="single-btn-group">
+                    <button class="single-btn" id="sev-light" onclick="selectSeverity('light')">
+                        🟡 경미<br><small style="font-size:10px;">×0.8배</small>
+                    </button>
+                    <button class="single-btn" id="sev-normal" onclick="selectSeverity('normal')">
+                        🟠 보통<br><small style="font-size:10px;">×1.0배</small>
+                    </button>
+                    <button class="single-btn" id="sev-severe" onclick="selectSeverity('severe')">
+                        🔴 심각<br><small style="font-size:10px;">×1.5배</small>
+                    </button>
                 </div>
+                <div class="alert" id="severityAlert"></div>
             </div>
 
+            <!-- 누수 지속 기간 (자동) -->
             <div class="form-group">
-                <label>⏱️ 누수 지속 기간</label>
-                <div class="time-inputs">
-                    <div class="time-input-group">
-                        <label>년</label>
-                        <input type="number" id="durationYear" placeholder="0"
-                               min="0" max="30" inputmode="numeric" />
-                    </div>
-                    <div class="time-input-group">
-                        <label>개월</label>
-                        <input type="number" id="durationMonth" placeholder="0"
-                               min="0" max="11" inputmode="numeric" />
-                    </div>
-                    <div class="time-input-group">
-                        <label>일</label>
-                        <input type="number" id="durationDay" placeholder="0"
-                               min="0" max="30" inputmode="numeric" />
-                    </div>
+                <label>⏱️ 누수 지속 기간 (자동 산정)</label>
+                <div class="duration-auto" id="durationResult">
+                    <div class="duration-value" id="durationResultValue">-</div>
+                    <div class="duration-sub" id="durationResultSub">누수 발생일을 입력하면 자동 계산됩니다</div>
                 </div>
             </div>
 
+            <!-- 가구·가전 피해 -->
             <div class="form-group">
                 <label>🪑 가구·가전 피해</label>
-                <div class="damage-level">
-                    <button class="damage-btn" onclick="selectType(this,'furniture')" data-value="없음">없음</button>
-                    <button class="damage-btn" onclick="selectType(this,'furniture')" data-value="소규모">소규모<br><small>50만원 미만</small></button>
-                    <button class="damage-btn" onclick="selectType(this,'furniture')" data-value="중규모">중규모<br><small>50~200만원</small></button>
-                    <button class="damage-btn" onclick="selectType(this,'furniture')" data-value="대규모">대규모<br><small>200만원↑</small></button>
+                <div class="single-btn-group">
+                    <button class="single-btn" id="fur-none" onclick="selectFurniture('none')">없음</button>
+                    <button class="single-btn" id="fur-small" onclick="selectFurniture('small')">
+                        소규모<br><small style="font-size:10px;">50만원 미만</small>
+                    </button>
+                    <button class="single-btn" id="fur-mid" onclick="selectFurniture('mid')">
+                        중규모<br><small style="font-size:10px;">50~200만원</small>
+                    </button>
+                    <button class="single-btn" id="fur-large" onclick="selectFurniture('large')">
+                        대규모<br><small style="font-size:10px;">200만원↑</small>
+                    </button>
                 </div>
             </div>
 
+            <!-- 피해 상세 -->
             <div class="form-group">
                 <label>📝 피해 상세 내용 (선택)</label>
                 <textarea id="damageDetail" rows="4"
-                          placeholder="누수 피해 상황을 자세히 기술해주세요.&#10;예) 천장에서 물이 떨어져 거실 바닥재 전체 손상, 소파 침수됨"></textarea>
+                    placeholder="누수 피해 상황을 자세히 기술해주세요.&#10;예) 천장에서 물이 떨어져 거실 바닥재 전체 손상, 소파 침수됨"></textarea>
             </div>
 
             <div class="btn-group">
@@ -906,8 +746,9 @@
         <div class="section" id="section-4">
             <div class="section-title">⚖️ 분쟁 현황</div>
 
+            <!-- 피해 인정 여부 -->
             <div class="dispute-section">
-                <div class="dispute-title">🏠 윗집 피해 인정 여부</div>
+                <div class="dispute-title">🏠 원인 세대 피해 인정 여부</div>
                 <div class="radio-group" id="acknowledgeGroup">
                     <label class="radio-item" onclick="selectRadio(this)">
                         <input type="radio" name="acknowledge" value="yes" />
@@ -928,34 +769,40 @@
                 </div>
             </div>
 
+            <!-- 피해자 요구 금액 -->
             <div class="dispute-section">
-                <div class="dispute-title">💰 보상 금액 협의 현황</div>
-                <div class="amount-inputs">
-                    <div class="amount-input-group">
-                        <label>🔴 피해자 요구 금액</label>
-                        <input type="number" id="victimAmount" placeholder="0"
-                               inputmode="numeric" oninput="showAmountText('victimAmount','victimAmountText')" />
-                        <div class="amount-text" id="victimAmountText"></div>
-                    </div>
-                    <div class="amount-input-group">
-                        <label>🔵 가해자 제시 금액</label>
-                        <input type="number" id="offenderAmount" placeholder="0"
-                               inputmode="numeric" oninput="showAmountText('offenderAmount','offenderAmountText')" />
-                        <div class="amount-text" id="offenderAmountText"></div>
-                    </div>
+                <div class="dispute-title">💰 피해자(아랫집) 요구 금액</div>
+                <div class="amount-select-grid" id="victimAmountGroup">
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'100만원 미만')" data-value="100만원 미만">100만원 미만</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'100만원')" data-value="100만원">100만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'200만원')" data-value="200만원">200만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'300만원')" data-value="300만원">300만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'400만원')" data-value="400만원">400만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'500만원')" data-value="500만원">500만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'1,000만원')" data-value="1,000만원">1,000만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'2,000만원')" data-value="2,000만원">2,000만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'3,000만원')" data-value="3,000만원">3,000만원</button>
+                    <button class="amount-select-btn" onclick="selectVictimAmount(this,'3,000만원 이상')" data-value="3,000만원 이상">3,000만원 이상</button>
                 </div>
             </div>
 
+            <!-- 가해자 제시 금액 -->
             <div class="dispute-section">
-                <div class="dispute-title">📅 분쟁 시작일</div>
-                <input type="date" id="disputeStartDate"
-                       style="width:100%;padding:13px;border:2px solid #e0e0e0;border-radius:10px;font-size:15px;background:white;" />
+                <div class="dispute-title">💰 원인 세대(가해자) 제시 금액</div>
+                <div class="offender-amount-wrap">
+                    <label>🔵 제시 금액 (만원 단위 입력)</label>
+                    <input type="number" id="offenderAmount" placeholder="0"
+                           inputmode="numeric"
+                           oninput="showAmountText('offenderAmount','offenderAmountText')" />
+                    <div class="amount-text" id="offenderAmountText"></div>
+                </div>
             </div>
 
+            <!-- 분쟁 경과 -->
             <div class="form-group">
                 <label>📋 분쟁 경과 내용 (선택)</label>
                 <textarea id="disputeDetail" rows="4"
-                          placeholder="분쟁 경과를 기술해주세요.&#10;예) 2023년 3월 최초 통보, 수리 약속 후 미이행, 내용증명 발송 등"></textarea>
+                    placeholder="분쟁 경과를 기술해주세요.&#10;예) 최초 누수 통보, 수리 약속 후 미이행, 내용증명 발송 등"></textarea>
             </div>
 
             <div class="btn-group">
@@ -974,9 +821,9 @@
                 <div class="notice-text">
                     본 결과는 입력 정보 기반의 <strong>개략적 추정치</strong>입니다.
                     실제 보수공사비는 현장 조사·자재 단가·시공 방법에 따라
-                    <strong>상당한 차이가 발생</strong>할 수 있으며,
+                    <strong>상당한 차이가 발생</strong>할 수 있으며
                     <strong>법적 효력이 없습니다.</strong>
-                    정확한 산정을 위해 전문가 상담을 받으시기 바랍니다.
+                    정확한 산정을 위해 반드시 전문가 상담을 받으시기 바랍니다.
                 </div>
             </div>
 
@@ -984,8 +831,12 @@
             <div class="result-section">
                 <div class="result-title">📋 피해 정보 요약</div>
                 <div class="result-item">
-                    <div class="item-label">🏢 건물 정보</div>
+                    <div class="item-label">🏢 건물 / 피해 세대</div>
                     <div class="item-value" id="result-building">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="item-label">💧 누수 원인</div>
+                    <div class="item-value" id="result-cause">-</div>
                 </div>
                 <div class="result-item">
                     <div class="item-label">📐 총 피해 면적</div>
@@ -995,10 +846,6 @@
                     <div class="item-label">⏱️ 누수 지속 기간</div>
                     <div class="item-value" id="result-duration">-</div>
                 </div>
-                <div class="result-item">
-                    <div class="item-label">⚖️ 분쟁 기간</div>
-                    <div class="item-value" id="result-dispute-period">-</div>
-                </div>
             </div>
 
             <!-- 비용 산출 -->
@@ -1006,9 +853,15 @@
                 <div class="result-title">💰 보수공사비 산출 내역</div>
 
                 <div class="result-item">
-                    <div class="item-label">🔨 보수공사비</div>
+                    <div class="item-label">🔨 기본 보수공사비</div>
+                    <div class="item-value" id="result-base">-</div>
+                    <small id="result-base-detail"></small>
+                </div>
+
+                <div class="result-item">
+                    <div class="item-label">📊 심각도 적용 보수공사비</div>
                     <div class="item-value" id="result-repair">-</div>
-                    <small id="repair-calc-detail"></small>
+                    <small id="result-repair-detail"></small>
                 </div>
 
                 <div class="result-item">
@@ -1030,23 +883,19 @@
                 </div>
             </div>
 
-            <!-- 분쟁 현황 -->
-            <div class="result-section" id="dispute-result-section">
+            <!-- 분쟁 현황 결과 -->
+            <div class="result-section">
                 <div class="result-title">⚖️ 분쟁 협의 현황</div>
                 <div class="dispute-result">
-                    <div style="font-size:13px;font-weight:bold;color:#e65100;margin-bottom:8px;"
-                         id="dispute-acknowledge-result"></div>
+                    <div style="font-size:13px;font-weight:bold;color:#e65100;margin-bottom:10px;"
+                         id="dispute-acknowledge-result">-</div>
                     <div id="dispute-amount-section" style="display:none;">
-                        <div class="dispute-bar">
-                            <div class="victim-bar" id="victimBar">피해자</div>
-                            <div class="offender-bar" id="offenderBar">가해자</div>
+                        <div style="font-size:12px;color:#555;margin-bottom:6px;">협의 금액 비교</div>
+                        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+                            <span>🔴 피해자 요구: <strong id="victimAmountResult">-</strong></span>
+                            <span>🔵 가해자 제시: <strong id="offenderAmountResult">-</strong></span>
                         </div>
-                        <div style="display:flex;justify-content:space-between;font-size:12px;color:#666;">
-                            <span>피해자: <strong id="victimAmountResult">-</strong></span>
-                            <span>가해자: <strong id="offenderAmountResult">-</strong></span>
-                        </div>
-                        <div style="margin-top:8px;font-size:13px;color:#e65100;font-weight:bold;"
-                             id="gapResult"></div>
+                        <div style="font-size:13px;color:#e65100;font-weight:bold;" id="gapResult"></div>
                     </div>
                 </div>
             </div>
@@ -1057,7 +906,6 @@
                 <p style="font-size:12px;color:#666;margin-bottom:12px;">
                     정확한 피해 산정과 법적 권리 보호를 위해 전문가 상담을 받으세요.
                 </p>
-
                 <div class="consult-section">
                     <a href="https://www.lawtalk.co.kr" target="_blank" class="consult-card lawyer-card">
                         <div class="card-icon">⚖️</div>
@@ -1067,7 +915,6 @@
                         </div>
                         <div class="card-arrow">›</div>
                     </a>
-
                     <a href="https://www.kira.or.kr" target="_blank" class="consult-card architect-card">
                         <div class="card-icon">🏗️</div>
                         <div class="card-body">
@@ -1077,7 +924,6 @@
                         <div class="card-arrow">›</div>
                     </a>
                 </div>
-
                 <div class="phone-info">
                     <strong>📞 추가 도움이 필요하신 경우</strong><br>
                     • 공동주택관리 분쟁조정위원회: <strong>1600-7004</strong><br>
@@ -1096,33 +942,59 @@
     </div><!-- /content -->
 </div><!-- /container -->
 
-<!-- 토스트 -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ==================== 전역 변수 ====================
+// ==================== 전역 상태 ====================
 let currentStep = 1;
-let selectedRooms = {};
-let damageSelections = { type: '', severity: '', furniture: '' };
 
-const roomNames = {
+// 누수 원인 (복수)
+let selectedCauses = { upper:false, roof:false, wall:false };
+
+// 피해 위치 (복수)
+let selectedRooms = {};
+const ROOM_PYEONG = {
+    living:4, kitchen:2, master:3, room2:2.5,
+    bathroom:1.5, balcony:3, entrance:0.3, utility:0.5, other:0.2
+};
+const ROOM_NAMES = {
     living:'거실', kitchen:'주방', master:'안방', room2:'작은방',
     bathroom:'화장실', balcony:'발코니', entrance:'현관',
     utility:'다용도실', other:'기타'
 };
 
+// 누수 유형 (복수)
+let selectedLeakTypes = { ceiling:false, wall:false, complex:false };
+
+// 심각도
+let selectedSeverity = '';
+
+// 가구·가전
+let selectedFurniture = '';
+
+// 피해자 요구금액
+let selectedVictimAmount = '';
+
+// 누수 지속 기간 (일수)
+let durationDays = 0;
+
+// 선택된 주소
+let selectedAddress = '';
+let selectedAddressKeyword = '';
+
 // ==================== 초기화 ====================
 document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('damageDate').value = today;
+    calcDuration();
 });
 
-// ==================== 토스트 메시지 ====================
+// ==================== 토스트 ====================
 function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2500);
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
 }
 
 // ==================== 단계 이동 ====================
@@ -1130,15 +1002,12 @@ function nextStep(current) {
     if (!validateStep(current)) return;
     showStep(current + 1);
 }
-
-function prevStep(current) {
-    showStep(current - 1);
-}
+function prevStep(current) { showStep(current - 1); }
 
 function showStep(step) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.step').forEach((s, i) => {
-        s.classList.remove('active', 'completed');
+        s.classList.remove('active','completed');
         if (i + 1 < step) s.classList.add('completed');
     });
     document.getElementById(`section-${step}`).classList.add('active');
@@ -1147,32 +1016,29 @@ function showStep(step) {
     currentStep = step;
     window.scrollTo(0, 0);
     document.querySelector('.content').scrollTop = 0;
+
+    // STEP3 진입 시 기간 동기화
+    if (step === 3) syncDurationToStep3();
 }
 
 // ==================== 유효성 검사 ====================
 function validateStep(step) {
     if (step === 1) {
-        const address = document.getElementById('addressInput').value.trim();
-        if (!address) {
-            showAlert('addressAlert', '⚠️ 주소를 입력해주세요.');
-            return false;
-        }
+        const addr = document.getElementById('addressInput').value.trim();
+        if (!addr) { showAlert('addressAlert','⚠️ 주소 또는 아파트명을 입력해주세요.'); return false; }
+        const causes = Object.values(selectedCauses).some(v => v);
+        if (!causes) { showAlert('causeAlert','⚠️ 누수 발생 원인을 1개 이상 선택해주세요.'); return false; }
         return true;
     }
     if (step === 2) {
-        const selected = Object.keys(selectedRooms).filter(k => selectedRooms[k]);
-        if (selected.length === 0) {
-            showAlert('roomAlert', '⚠️ 피해 위치를 1개 이상 선택해주세요.');
-            return false;
-        }
-        const hasArea = selected.some(r => {
-            const v = parseFloat(document.getElementById(`area-input-${r}`).value);
-            return v > 0;
-        });
-        if (!hasArea) {
-            showAlert('roomAlert', '⚠️ 선택한 공간의 피해 면적을 입력해주세요.');
-            return false;
-        }
+        const rooms = Object.keys(selectedRooms).filter(k => selectedRooms[k]);
+        if (rooms.length === 0) { showAlert('roomAlert','⚠️ 피해 위치를 1개 이상 선택해주세요.'); return false; }
+        return true;
+    }
+    if (step === 3) {
+        const types = Object.values(selectedLeakTypes).some(v => v);
+        if (!types) { showAlert('leakTypeAlert','⚠️ 누수 유형을 1개 이상 선택해주세요.'); return false; }
+        if (!selectedSeverity) { showAlert('severityAlert','⚠️ 피해 심각도를 선택해주세요.'); return false; }
         return true;
     }
     return true;
@@ -1186,89 +1052,287 @@ function showAlert(id, msg) {
 }
 
 // ==================== 주소 검색 ====================
-function searchAddress() {
-    const address = document.getElementById('addressInput').value.trim();
-    if (!address) {
-        showAlert('addressAlert', '⚠️ 주소를 입력해주세요.');
+// 샘플 데이터 (실제 서비스 시 도로명주소 API 연동)
+const SAMPLE_BUILDINGS = [
+    { name:'래미안 강남힐즈', addr:'서울 강남구 개포동 1234', keyword:'래미안 강남힐즈 개포동' },
+    { name:'힐스테이트 역삼', addr:'서울 강남구 역삼동 567', keyword:'힐스테이트 역삼' },
+    { name:'아이파크 마포', addr:'서울 마포구 아현동 890', keyword:'아이파크 마포 아현동' },
+    { name:'롯데캐슬 송파', addr:'서울 송파구 잠실동 111', keyword:'롯데캐슬 송파 잠실동' },
+    { name:'자이 수원', addr:'경기 수원시 영통구 매탄동 222', keyword:'자이 수원 매탄동' },
+    { name:'푸르지오 분당', addr:'경기 성남시 분당구 정자동 333', keyword:'푸르지오 분당 정자동' },
+    { name:'e편한세상 인천', addr:'인천 연수구 송도동 444', keyword:'e편한세상 인천 송도동' },
+    { name:'더샵 부산', addr:'부산 해운대구 우동 555', keyword:'더샵 부산 해운대' },
+];
+
+let searchTimer = null;
+
+function onAddressInput() {
+    clearTimeout(searchTimer);
+    const val = document.getElementById('addressInput').value.trim();
+    if (val.length < 2) {
+        document.getElementById('searchResults').classList.remove('show');
         return;
     }
+    searchTimer = setTimeout(() => searchAddress(), 400);
+}
+
+function searchAddress() {
+    const val = document.getElementById('addressInput').value.trim();
+    if (!val) { showAlert('addressAlert','⚠️ 검색어를 입력해주세요.'); return; }
+
     document.getElementById('addressLoading').classList.add('show');
-    document.getElementById('buildingInfo').classList.remove('show');
+    document.getElementById('searchResults').classList.remove('show');
 
     setTimeout(() => {
         document.getElementById('addressLoading').classList.remove('show');
-        const data = generateSampleData(address);
-        document.getElementById('buildingName').textContent = data.name;
-        document.getElementById('buildingArea').textContent = data.area;
-        document.getElementById('buildingApproval').textContent = data.approval;
-        document.getElementById('buildingAge').textContent = data.age;
-        document.getElementById('buildingInfo').classList.add('show');
-        showToast('✅ 건물 정보를 불러왔습니다');
-    }, 1500);
+
+        // 필터링 (실제 서비스 시 도로명주소 API 사용)
+        const results = SAMPLE_BUILDINGS.filter(b =>
+            b.name.includes(val) || b.addr.includes(val)
+        );
+
+        // 입력값으로 직접 추가
+        const directResult = { name: val, addr: '직접 입력한 주소', keyword: val };
+        const allResults = results.length > 0 ? results : [directResult];
+
+        renderSearchResults(allResults);
+    }, 600);
 }
 
-function generateSampleData(address) {
-    const words = address.split(' ');
-    const name = words[words.length - 1] || address;
-    const areas = ['59.98㎡ (18.1평)', '84.92㎡ (25.7평)', '101.23㎡ (30.6평)', '114.56㎡ (34.7평)'];
+function renderSearchResults(results) {
+    const container = document.getElementById('searchResults');
+    if (results.length === 0) {
+        container.innerHTML = '<div class="search-result-item"><div class="result-name">검색 결과가 없습니다</div><div class="result-addr">다른 검색어를 입력해보세요</div></div>';
+        container.classList.add('show');
+        return;
+    }
+    container.innerHTML = results.map(r => `
+        <div class="search-result-item" onclick="selectAddress('${r.name}','${r.addr}','${r.keyword}')">
+            <div class="result-name">🏢 ${r.name}</div>
+            <div class="result-addr">📍 ${r.addr}</div>
+        </div>
+    `).join('');
+    container.classList.add('show');
+}
+
+function selectAddress(name, addr, keyword) {
+    selectedAddress = name;
+    selectedAddressKeyword = keyword;
+
+    document.getElementById('addressInput').value = name;
+    document.getElementById('searchResults').classList.remove('show');
+    document.getElementById('selectedAddrText').textContent = `📍 ${name} (${addr})`;
+    document.getElementById('detailAddressBox').classList.add('show');
+
+    // 건물 정보 자동 표시 (샘플)
+    showBuildingInfo(name);
+    showToast('✅ 주소가 선택되었습니다');
+}
+
+function showBuildingInfo(name) {
+    const areas = ['59.98㎡ (18.1평)','84.92㎡ (25.7평)','101.23㎡ (30.6평)','114.56㎡ (34.7평)'];
     const years = [1995,1998,2001,2005,2008,2012,2015,2018,2020];
     const year = years[Math.floor(Math.random() * years.length)];
     const month = Math.floor(Math.random() * 12) + 1;
-    return {
-        name,
-        area: areas[Math.floor(Math.random() * areas.length)],
-        approval: `${year}년 ${month}월`,
-        age: `${new Date().getFullYear() - year}년 경과`
-    };
+
+    document.getElementById('buildingName').textContent = name;
+    document.getElementById('buildingArea').textContent = areas[Math.floor(Math.random() * areas.length)];
+    document.getElementById('buildingApproval').textContent = `${year}년 ${month}월`;
+    document.getElementById('buildingAge').textContent = `${new Date().getFullYear() - year}년 경과`;
+    document.getElementById('buildingInfo').classList.add('show');
+}
+
+function openNaverLand() {
+    const keyword = selectedAddressKeyword || document.getElementById('addressInput').value.trim();
+    if (!keyword) { showToast('⚠️ 먼저 주소를 선택해주세요'); return; }
+    const url = `https://land.naver.com/search/index.naver?query=${encodeURIComponent(keyword)}`;
+    window.open(url, '_blank');
+}
+
+// ==================== 누수 지속 기간 ====================
+function calcDuration() {
+    const dateVal = document.getElementById('damageDate').value;
+    const display = document.getElementById('durationDisplay');
+    const valueEl = document.getElementById('durationValue');
+
+    if (!dateVal) { display.style.display = 'none'; durationDays = 0; return; }
+
+    const start = new Date(dateVal);
+    const now = new Date();
+    const diff = now - start;
+
+    if (diff < 0) {
+        display.style.display = 'block';
+        valueEl.textContent = '⚠️ 미래 날짜입니다';
+        durationDays = 0;
+        return;
+    }
+
+    durationDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const years = Math.floor(durationDays / 365);
+    const months = Math.floor((durationDays % 365) / 30);
+    const days = durationDays % 30;
+
+    let text = '';
+    if (years > 0) text += `${years}년 `;
+    if (months > 0) text += `${months}개월 `;
+    if (days > 0) text += `${days}일`;
+    if (!text) text = '1일 미만';
+
+    valueEl.textContent = text;
+    display.style.display = 'block';
+    syncDurationToStep3();
+}
+
+function syncDurationToStep3() {
+    const dateVal = document.getElementById('damageDate').value;
+    const resultEl = document.getElementById('durationResultValue');
+    const subEl = document.getElementById('durationResultSub');
+
+    if (!dateVal || durationDays === 0) {
+        resultEl.textContent = '누수 발생일 미입력';
+        subEl.textContent = '1단계에서 누수 발생일을 입력해주세요';
+        return;
+    }
+
+    const years = Math.floor(durationDays / 365);
+    const months = Math.floor((durationDays % 365) / 30);
+    const days = durationDays % 30;
+    let text = '';
+    if (years > 0) text += `${years}년 `;
+    if (months > 0) text += `${months}개월 `;
+    if (days > 0) text += `${days}일`;
+    if (!text) text = '1일 미만';
+
+    resultEl.textContent = text;
+    subEl.textContent = `${document.getElementById('damageDate').value} ~ 오늘 (${durationDays}일)`;
+}
+
+// ==================== 누수 원인 선택 ====================
+function toggleCause(id) {
+    selectedCauses[id] = !selectedCauses[id];
+    const el = document.getElementById(`cause-${id}`);
+    el.classList.toggle('selected', selectedCauses[id]);
 }
 
 // ==================== 방 선택 ====================
 function toggleRoom(roomId) {
-    const roomEl = document.getElementById(`room-${roomId}`);
-    const areaEl = document.getElementById(`area-${roomId}`);
-    if (selectedRooms[roomId]) {
-        selectedRooms[roomId] = false;
-        roomEl.classList.remove('selected');
-        areaEl.classList.remove('show');
-        document.getElementById(`area-input-${roomId}`).value = '';
-    } else {
-        selectedRooms[roomId] = true;
-        roomEl.classList.add('selected');
-        areaEl.classList.add('show');
-    }
-    updateSummary();
+    selectedRooms[roomId] = !selectedRooms[roomId];
+    document.getElementById(`room-${roomId}`).classList.toggle('selected', selectedRooms[roomId]);
+    updateAreaSummary();
 }
 
-function updateSummary() {
-    const summaryEl = document.getElementById('roomSummary');
+function updateAreaSummary() {
+    const summaryEl = document.getElementById('areaSummary');
     const selected = Object.keys(selectedRooms).filter(k => selectedRooms[k]);
+
     if (selected.length === 0) { summaryEl.classList.remove('show'); return; }
 
     summaryEl.classList.add('show');
-    let totalArea = 0;
+    let total = 0;
     let html = '';
     selected.forEach(room => {
-        const area = parseFloat(document.getElementById(`area-input-${room}`).value) || 0;
-        totalArea += area;
+        const p = ROOM_PYEONG[room];
+        total += p;
         html += `<div class="summary-item">
-            <span>${roomNames[room]}</span>
-            <span>${area > 0 ? area + '㎡ (' + (area*0.3025).toFixed(1) + '평)' : '면적 미입력'}</span>
+            <span>${ROOM_NAMES[room]}</span>
+            <span>${p}평</span>
         </div>`;
     });
     document.getElementById('summaryItems').innerHTML = html;
-    document.getElementById('totalAreaDisplay').textContent =
-        `${totalArea.toFixed(2)}㎡ (${(totalArea*0.3025).toFixed(2)}평)`;
+    document.getElementById('totalAreaDisplay').textContent = `${total.toFixed(1)}평`;
 }
 
-// ==================== 선택 버튼 ====================
-function selectType(btn, category) {
-    btn.closest('.damage-level').querySelectorAll('.damage-btn')
-       .forEach(b => b.classList.remove('selected'));
+function getTotalPyeong() {
+    return Object.keys(selectedRooms)
+        .filter(k => selectedRooms[k])
+        .reduce((sum, k) => sum + ROOM_PYEONG[k], 0);
+}
+
+// ==================== 누수 유형 (복수) ====================
+function toggleLeakType(type) {
+    // 복합 선택 시 천장/벽면 해제, 천장/벽면 선택 시 복합 해제
+    if (type === 'complex') {
+        selectedLeakTypes.ceiling = false;
+        selectedLeakTypes.wall = false;
+        selectedLeakTypes.complex = !selectedLeakTypes.complex;
+    } else {
+        selectedLeakTypes.complex = false;
+        document.getElementById('type-complex').classList.remove('selected');
+        selectedLeakTypes[type] = !selectedLeakTypes[type];
+    }
+    document.getElementById('type-ceiling').classList.toggle('selected', selectedLeakTypes.ceiling);
+    document.getElementById('type-wall').classList.toggle('selected', selectedLeakTypes.wall);
+    document.getElementById('type-complex').classList.toggle('selected', selectedLeakTypes.complex);
+}
+
+// 누수 유형별 단가 (만원/평)
+function getLeakUnitPrice() {
+    const c = selectedLeakTypes.ceiling;
+    const w = selectedLeakTypes.wall;
+    const x = selectedLeakTypes.complex;
+    if (x) return 350000;           // 복합: 35만원
+    if (c && w) return 350000;      // 천장+벽면: 35만원
+    if (c) return 250000;           // 천장만: 25만원
+    if (w) return 150000;           // 벽면만: 15만원
+    return 300000;                  // 기본
+}
+
+function getLeakTypeName() {
+    const c = selectedLeakTypes.ceiling;
+    const w = selectedLeakTypes.wall;
+    const x = selectedLeakTypes.complex;
+    if (x) return '복합 누수';
+    if (c && w) return '천장+벽면 누수';
+    if (c) return '천장 누수';
+    if (w) return '벽면 누수';
+    return '-';
+}
+
+// ==================== 심각도 ====================
+function selectSeverity(val) {
+    selectedSeverity = val;
+    ['light','normal','severe'].forEach(v =>
+        document.getElementById(`sev-${v}`).classList.remove('selected')
+    );
+    document.getElementById(`sev-${val}`).classList.add('selected');
+}
+
+function getSeverityMultiplier() {
+    if (selectedSeverity === 'light') return 0.8;
+    if (selectedSeverity === 'severe') return 1.5;
+    return 1.0;
+}
+
+function getSeverityName() {
+    if (selectedSeverity === 'light') return '경미 (×0.8)';
+    if (selectedSeverity === 'severe') return '심각 (×1.5)';
+    return '보통 (×1.0)';
+}
+
+// ==================== 가구·가전 ====================
+function selectFurniture(val) {
+    selectedFurniture = val;
+    ['none','small','mid','large'].forEach(v =>
+        document.getElementById(`fur-${v}`).classList.remove('selected')
+    );
+    document.getElementById(`fur-${val}`).classList.add('selected');
+}
+
+function getFurnitureCost() {
+    const map = { none:0, small:300000, mid:1250000, large:3000000 };
+    return map[selectedFurniture] || 0;
+}
+
+// ==================== 피해자 요구금액 ====================
+function selectVictimAmount(btn, val) {
+    selectedVictimAmount = val;
+    document.querySelectorAll('#victimAmountGroup .amount-select-btn')
+            .forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
-    damageSelections[category] = btn.dataset.value;
 }
 
-// ==================== 라디오 버튼 ====================
+// ==================== 라디오 ====================
 function selectRadio(label) {
     document.querySelectorAll('#acknowledgeGroup .radio-item')
             .forEach(l => l.classList.remove('checked'));
@@ -1278,130 +1342,130 @@ function selectRadio(label) {
 // ==================== 금액 표시 ====================
 function showAmountText(inputId, textId) {
     const val = parseInt(document.getElementById(inputId).value) || 0;
-    document.getElementById(textId).textContent = val > 0 ? val.toLocaleString() + '원' : '';
+    document.getElementById(textId).textContent = val > 0 ? (val * 10000).toLocaleString() + '원' : '';
 }
 
 // ==================== 결과 산출 ====================
 function calculateResult() {
-    // 면적 계산
-    let totalAreaM2 = 0;
-    Object.keys(selectedRooms).filter(k => selectedRooms[k]).forEach(room => {
-        totalAreaM2 += parseFloat(document.getElementById(`area-input-${room}`).value) || 0;
-    });
-    const totalPyeong = totalAreaM2 * 0.3025;
+    // 1. 피해 면적
+    const totalPyeong = getTotalPyeong();
 
-    // 보수공사비: 평당 30만원
-    const repairCost = Math.round(totalPyeong * 300000);
+    // 2. 누수 유형별 단가
+    const unitPrice = getLeakUnitPrice();
 
-    // 분쟁 기간 & 위자료
-    const disputeStartDate = document.getElementById('disputeStartDate').value;
+    // 3. 기본 보수공사비
+    const baseCost = Math.round(totalPyeong * unitPrice);
+
+    // 4. 심각도 적용
+    const severityMult = getSeverityMultiplier();
+    const repairCost = Math.round(baseCost * severityMult);
+
+    // 5. 위자료 (분쟁 기간 = 누수 지속 기간 기준)
+    const disputeYears = durationDays / 365;
     let consolationFee = 0;
-    let disputeYears = 0;
-    let disputeMonths = 0;
-
-    if (disputeStartDate) {
-        const diffMs = new Date() - new Date(disputeStartDate);
-        const diffDays = diffMs / (1000 * 60 * 60 * 24);
-        disputeYears = diffDays / 365;
-        disputeMonths = Math.floor(diffDays / 30);
-        if (disputeYears >= 1) {
-            consolationFee = Math.floor(disputeYears) * 500000;
-        }
+    if (disputeYears >= 1) {
+        consolationFee = Math.floor(disputeYears) * 500000;
     }
 
-    // 가구·가전
-    const furnitureMap = { '없음':0, '소규모':300000, '중규모':1250000, '대규모':3000000 };
-    const furnitureCost = furnitureMap[damageSelections.furniture] || 0;
+    // 6. 가구·가전
+    const furnitureCost = getFurnitureCost();
 
+    // 7. 총액
     const totalCost = repairCost + consolationFee + furnitureCost;
 
     showStep(5);
 
-    // 결과 채우기
-    const buildingName = document.getElementById('buildingName').textContent;
-    const victimUnit = document.getElementById('victimUnit').value || '-';
-    document.getElementById('result-building').textContent = `${buildingName} ${victimUnit}`;
-    document.getElementById('result-area').textContent =
-        `${totalAreaM2.toFixed(2)}㎡ (${totalPyeong.toFixed(2)}평)`;
+    // ── 결과 채우기 ──
 
-    const dY = document.getElementById('durationYear').value || 0;
-    const dM = document.getElementById('durationMonth').value || 0;
-    const dD = document.getElementById('durationDay').value || 0;
-    let durText = [dY>0?dY+'년':'', dM>0?dM+'개월':'', dD>0?dD+'일':''].filter(Boolean).join(' ');
-    document.getElementById('result-duration').textContent = durText || '미입력';
+    // 건물/세대
+    const bName = document.getElementById('buildingName').textContent;
+    const vUnit = document.getElementById('victimUnit').value || '-';
+    document.getElementById('result-building').textContent = `${bName} ${vUnit}`;
 
-    if (disputeStartDate) {
-        const y = Math.floor(disputeMonths/12);
-        const m = disputeMonths % 12;
-        document.getElementById('result-dispute-period').textContent =
-            [y>0?y+'년':'', m>0?m+'개월':''].filter(Boolean).join(' ') || '1개월 미만';
-    } else {
-        document.getElementById('result-dispute-period').textContent = '미입력';
-    }
+    // 누수 원인
+    const causeNames = [];
+    if (selectedCauses.upper) causeNames.push('윗층');
+    if (selectedCauses.roof) causeNames.push('옥상');
+    if (selectedCauses.wall) causeNames.push('외벽');
+    document.getElementById('result-cause').textContent = causeNames.join(' · ') || '-';
 
-    document.getElementById('repair-calc-detail').textContent =
-        `${totalPyeong.toFixed(2)}평 × 300,000원/평`;
+    // 피해 면적
+    document.getElementById('result-area').textContent = `${totalPyeong.toFixed(1)}평`;
+
+    // 누수 지속 기간
+    syncDurationToStep3();
+    document.getElementById('result-duration').textContent =
+        document.getElementById('durationResultValue').textContent;
+
+    // 기본 보수공사비
+    document.getElementById('result-base').textContent = baseCost.toLocaleString() + '원';
+    document.getElementById('result-base-detail').textContent =
+        `${totalPyeong.toFixed(1)}평 × ${unitPrice.toLocaleString()}원/평 (${getLeakTypeName()})`;
+
+    // 심각도 적용
     document.getElementById('result-repair').textContent = repairCost.toLocaleString() + '원';
+    document.getElementById('result-repair-detail').textContent =
+        `${getSeverityName()} 적용`;
 
+    // 위자료
+    document.getElementById('result-consolation').textContent = consolationFee.toLocaleString() + '원';
     document.getElementById('consolation-calc-detail').textContent =
         consolationFee > 0
-            ? `분쟁 ${Math.floor(disputeYears)}년 × 500,000원`
-            : '분쟁 기간 1년 미만 (미산정)';
-    document.getElementById('result-consolation').textContent =
-        consolationFee.toLocaleString() + '원';
+            ? `누수 ${Math.floor(disputeYears)}년 × 500,000원`
+            : '누수 기간 1년 미만 (미산정)';
 
+    // 가구·가전
     if (furnitureCost > 0) {
-        document.getElementById('result-furniture').textContent =
-            furnitureCost.toLocaleString() + '원 (추정)';
+        document.getElementById('result-furniture').textContent = furnitureCost.toLocaleString() + '원 (추정)';
         document.getElementById('furniture-result-item').style.display = 'block';
     } else {
         document.getElementById('furniture-result-item').style.display = 'none';
     }
 
+    // 총액
     document.getElementById('result-total').textContent = totalCost.toLocaleString() + '원';
 
     // 분쟁 현황
     const ackMap = {
-        yes:'✅ 윗집에서 피해사실을 인정하고 있습니다.',
-        partial:'⚠️ 윗집에서 피해사실을 일부 인정하고 있습니다.',
-        no:'❌ 윗집에서 피해사실을 부인하고 있습니다.',
-        ignore:'🚫 윗집과 연락이 두절되거나 무시하고 있습니다.'
+        yes:'✅ 원인 세대에서 피해사실을 인정하고 있습니다.',
+        partial:'⚠️ 원인 세대에서 피해사실을 일부 인정하고 있습니다.',
+        no:'❌ 원인 세대에서 피해사실을 부인하고 있습니다.',
+        ignore:'🚫 원인 세대와 연락이 두절되거나 무시하고 있습니다.'
     };
     const ackVal = document.querySelector('input[name="acknowledge"]:checked');
     document.getElementById('dispute-acknowledge-result').textContent =
         ackVal ? ackMap[ackVal.value] : '미입력';
 
-    const vAmt = parseInt(document.getElementById('victimAmount').value) || 0;
+    const vAmt = selectedVictimAmount;
     const oAmt = parseInt(document.getElementById('offenderAmount').value) || 0;
 
-    if (vAmt > 0 || oAmt > 0) {
+    if (vAmt || oAmt > 0) {
         document.getElementById('dispute-amount-section').style.display = 'block';
-        const total = vAmt + oAmt;
-        const vPct = total > 0 ? (vAmt/total*100).toFixed(0) : 50;
-        document.getElementById('victimBar').style.width = vPct + '%';
-        document.getElementById('offenderBar').style.width = (100-vPct) + '%';
-        document.getElementById('victimAmountResult').textContent = vAmt.toLocaleString() + '원';
-        document.getElementById('offenderAmountResult').textContent = oAmt.toLocaleString() + '원';
-        const gap = vAmt - oAmt;
-        document.getElementById('gapResult').textContent =
-            gap > 0 ? `💬 차액: ${gap.toLocaleString()}원 (피해자 요구가 더 높음)`
-            : gap < 0 ? `💬 차액: ${Math.abs(gap).toLocaleString()}원 (가해자 제시가 더 높음)`
-            : '✅ 협의 금액이 일치합니다.';
+        document.getElementById('victimAmountResult').textContent = vAmt || '-';
+        document.getElementById('offenderAmountResult').textContent =
+            oAmt > 0 ? (oAmt * 10000).toLocaleString() + '원' : '-';
+
+        if (vAmt && oAmt > 0) {
+            document.getElementById('gapResult').textContent =
+                `💬 피해자 요구: ${vAmt} / 가해자 제시: ${(oAmt*10000).toLocaleString()}원`;
+        }
     } else {
         document.getElementById('dispute-amount-section').style.display = 'none';
     }
 }
 
-// ==================== 공유하기 ====================
+// ==================== 공유 ====================
 function shareResult() {
     const total = document.getElementById('result-total').textContent;
     const area = document.getElementById('result-area').textContent;
-    const text = `[누수피해 보수공사비 산정 결과]\n피해면적: ${area}\n총 청구 추정액: ${total}\n\n※ 개략적 추정치입니다.`;
+    const cause = document.getElementById('result-cause').textContent;
+    const text = `[누수피해 보수공사비 산정 결과]\n누수 원인: ${cause}\n피해면적: ${area}\n총 청구 추정액: ${total}\n\n※ 개략적 추정치입니다.`;
 
     if (navigator.share) {
-        navigator.share({ title: '누수피해 보수공사비 산정 결과', text });
+        navigator.share({ title:'누수피해 보수공사비 산정 결과', text });
     } else {
-        navigator.clipboard.writeText(text).then(() => showToast('📋 결과가 복사되었습니다'));
+        navigator.clipboard.writeText(text)
+            .then(() => showToast('📋 결과가 복사되었습니다'));
     }
 }
 
